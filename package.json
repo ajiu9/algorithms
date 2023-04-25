@@ -1,0 +1,14 @@
+{
+  "name": "algorithms",
+  "version": "1.0.0",
+  "description": "常用的算法",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "algorithms"
+  ],
+  "author": "ajiu9",
+  "license": "ISC"
+}
