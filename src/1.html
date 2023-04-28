@@ -25,6 +25,7 @@
     for (let y = 0; y < 100; y++) {
         for (let x = 0; x < 100; x++) {
             const cell = document.createElement("div");
+            cell.setAttribute('id', 100 * y + x)
             cell.classList.add("cell");
             if (map[100 * y + x] === 1)
                 cell.style.backgroundColor = "black";
@@ -48,4 +49,79 @@
     });
     document.addEventListener("mouseup", () => mousedown = false);
     document.addEventListener("contextmenu", e => e.preventDefault())
+    function bfs(graph, start, end) {
+        // 创建队列
+        const queue = []
+        const visited = new Set()
+        // 将起点加入队列
+        queue.push([start, [start]])
+
+        // 开始遍历
+        while(queue.length) {
+            // 取出队列的首节点
+            const [node, path] = queue.shift()
+            // 如果该节点是终点，返回路径
+            if (node === end) {
+                return path
+            }
+
+            // 遍历该节点的相邻节点
+            graph[node].forEach(neighbor => {
+                if (!visited.has(neighbor)) {
+                    visited.add(neighbor)
+                    // 将相邻节点加入队列，并更新路径
+                    queue.push([neighbor, path.concat(neighbor)])
+                }
+
+            })
+        }
+        return null
+    }
+
+    async function path(map, start, end) {
+       
+        const queue = [start]
+        const visited = new Set()
+
+        const insert = (x, y) => {
+            console.log(y * 100 + x, map[y * 100 + x])
+            if (x < 0 || x >= 100 || y < 0 || y >= 100) return
+            if (map[y * 100 + x]) return
+            map[y* 100 + x] = 2
+            visited.add([x, y])
+            queue.push([x, y])
+        }
+
+        const startId = start[0] * 100 + start[1]
+        const endId = end[0] * 100 + end[1]
+
+        while(queue.length) {
+            let [x, y] = queue.shift()
+            console.log(x, y)
+            if (x === end[0] && y === end[1]) {
+                console.log(visited)
+                return true
+            }
+            const id = y * 100 + x
+            const cell = document.getElementById(id)
+            cell.style.backgroundColor = [startId, endId].includes(id) ? 'red': 'black'
+            
+            await sleep()
+            insert(x, y - 1)
+            insert(x + 1, y)
+            insert(x, y + 1)
+            insert(x - 1, y)
+           
+        }
+
+        return false
+
+    }
+    function sleep() {
+        return new Promise(resolve => {
+            setTimeout(() =>  {
+                resolve()
+            }, 20)
+        })
+    }
 </script>
